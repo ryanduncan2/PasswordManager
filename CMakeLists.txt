@@ -22,7 +22,7 @@ set(SRC_FILES
     src/GUI/ListEntry.cpp
 )
 
-add_executable(PasswordManager WIN32 ${SRC_FILES})
+add_executable(PasswordManager WIN32 ${SRC_FILES} PasswordManager.rc)
 include("${wxWidgets_USE_FILE}")
 target_include_directories(PasswordManager PRIVATE "${CMAKE_SOURCE_DIR}/include")
 target_link_libraries(PasswordManager PRIVATE OpenSSL::Crypto ${wxWidgets_LIBRARIES})
