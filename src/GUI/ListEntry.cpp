@@ -26,11 +26,11 @@ namespace PM
 
         // Username Label
 
-        m_UsernameLabel = new wxStaticText(this, wxID_ANY, account.GetUsername().c_str());
-        SetBinds(m_UsernameLabel);
-        GetSizer()->Add(m_UsernameLabel, 1, wxALL, 5);
+        m_IdentifierLabel = new wxStaticText(this, wxID_ANY, account.GetIdentifier().c_str());
+        SetBinds(m_IdentifierLabel);
+        GetSizer()->Add(m_IdentifierLabel, 1, wxALL, 5);
 
-        m_UsernameLabel->Bind(wxEVT_LEFT_DCLICK, [this](wxMouseEvent& evt)
+        m_IdentifierLabel->Bind(wxEVT_LEFT_DCLICK, [this](wxMouseEvent& evt)
         {
             QueueEvent(new wxMouseEvent(wxEVT_LEFT_DCLICK));
         });
@@ -48,7 +48,7 @@ namespace PM
             {
                 SetBackgroundColour(BACKGROUND_COLOUR_NEUTRAL);
                 m_SystemLabel->SetBackgroundColour(BACKGROUND_COLOUR_NEUTRAL);
-                m_UsernameLabel->SetBackgroundColour(BACKGROUND_COLOUR_NEUTRAL);
+                m_IdentifierLabel->SetBackgroundColour(BACKGROUND_COLOUR_NEUTRAL);
                 SetCursor(wxCursor(wxCURSOR_DEFAULT));
 
                 Refresh();
@@ -62,7 +62,7 @@ namespace PM
         {
             SetBackgroundColour(BACKGROUND_COLOUR_HOVERED);
             m_SystemLabel->SetBackgroundColour(BACKGROUND_COLOUR_HOVERED);
-            m_UsernameLabel->SetBackgroundColour(BACKGROUND_COLOUR_HOVERED);
+            m_IdentifierLabel->SetBackgroundColour(BACKGROUND_COLOUR_HOVERED);
             SetCursor(wxCursor(wxCURSOR_HAND));
             
             Refresh();
@@ -74,12 +74,14 @@ namespace PM
     void ListEntry::SetSystem(const std::string& system)
     {
         m_SystemLabel->SetLabel(system);
+
         Refresh();
     }
 
-    void ListEntry::SetUsername(const std::string& username)
+    void ListEntry::SetIdentifier(const std::string& id)
     {
-        m_UsernameLabel->SetLabel(username);
+        m_IdentifierLabel->SetLabel(id);
+        
         Refresh();
     }
 
@@ -87,7 +89,7 @@ namespace PM
     {
         SetBackgroundColour(BACKGROUND_COLOUR_NEUTRAL);
         m_SystemLabel->SetBackgroundColour(BACKGROUND_COLOUR_NEUTRAL);
-        m_UsernameLabel->SetBackgroundColour(BACKGROUND_COLOUR_NEUTRAL);
+        m_IdentifierLabel->SetBackgroundColour(BACKGROUND_COLOUR_NEUTRAL);
         SetCursor(wxCursor(wxCURSOR_DEFAULT));
 
         Refresh();

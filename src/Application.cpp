@@ -153,7 +153,7 @@ namespace PM
                     m_Manager.SaveData();
 
                     accountEntry->SetSystem(account.GetSystem());
-                    accountEntry->SetUsername(account.GetUsername());
+                    accountEntry->SetIdentifier(account.GetIdentifier());
                 }
                 else if (returnCode == AccountViewer::ReturnCode::DELETED)
                 {

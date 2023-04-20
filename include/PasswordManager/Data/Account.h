@@ -9,7 +9,8 @@ namespace PM
     class Account
     {
     private:
-        std::string m_SystemField, m_UsernameField;
+        std::string m_SystemField;
+        std::string m_IdentifierName, m_IdentifierField;
         std::vector<std::pair<std::string, std::string>> m_Fields;
 
     public:
@@ -19,10 +20,12 @@ namespace PM
 
         void AddField(const std::string& key, const std::string& value) noexcept;
         void SetSystem(const std::string& system) noexcept;
-        inline void SetUsername(const std::string& username) noexcept { m_UsernameField = username; }
+        inline void SetIdentifier(const std::string& id) noexcept { m_IdentifierField = id; }
+        inline void SetIdentifierName(const std::string& name) noexcept { m_IdentifierName = name; }
 
         inline std::string GetSystem() const { return m_SystemField; }
-        inline std::string GetUsername() const { return m_UsernameField; }
+        inline std::string GetIdentifier() const { return m_IdentifierField; }
+        inline std::string GetIdentifierName() const { return m_IdentifierName; }
         inline std::vector<std::pair<std::string, std::string>> GetFields() const noexcept { return m_Fields; }
 
         std::uint8_t* Serialise(std::size_t& sizeBuffer) const noexcept;

@@ -89,7 +89,7 @@ namespace PM
 
         m_SystemLabel->SetLabel((m_Account.GetSystem() + " Account").c_str());
 
-        AddField("Username", m_Account.GetUsername());
+        AddField(m_Account.GetIdentifierName(), m_Account.GetIdentifier());
 
         for (std::size_t i = 0; i < m_Account.GetFields().size(); ++i)
         {

@@ -13,7 +13,7 @@ namespace PM
         static const wxColour BACKGROUND_COLOUR_NEUTRAL;
         static const wxColour BACKGROUND_COLOUR_HOVERED;
 
-        wxStaticText *m_SystemLabel, *m_UsernameLabel;
+        wxStaticText *m_SystemLabel, *m_IdentifierLabel;
 
         void SetBinds(wxWindow* window);
 
@@ -21,7 +21,7 @@ namespace PM
         ListEntry(wxWindow* parent, const Account& account);
 
         void SetSystem(const std::string& system);
-        void SetUsername(const std::string& username);
+        void SetIdentifier(const std::string& id);
 
         void ResetBackground();
     };

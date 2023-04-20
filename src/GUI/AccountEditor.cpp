@@ -5,12 +5,12 @@
 
 namespace PM
 {
-    AccountEditor::AccountEditor(wxWindow* parent) : wxDialog(parent, wxID_ANY, "Create Account", wxDefaultPosition, wxSize(500, 400))
+    AccountEditor::AccountEditor(wxWindow* parent) : wxDialog(parent, wxID_ANY, "Create Account", wxDefaultPosition, wxSize(500, 400)), m_IdentifierName("Username")
     {
         SetupGUI();
     }
 
-    AccountEditor::AccountEditor(wxWindow* parent, const Account& account) : wxDialog(parent, wxID_ANY, "Edit Account", wxDefaultPosition, wxSize(500, 400)), m_Account(account)
+    AccountEditor::AccountEditor(wxWindow* parent, const Account& account) : wxDialog(parent, wxID_ANY, "Edit Account", wxDefaultPosition, wxSize(500, 400)), m_Account(account), m_IdentifierName(account.GetIdentifierName())
     {
         SetupGUI();
 
@@ -53,10 +53,32 @@ namespace PM
 
         // Username Field
 
-        wxStaticText* usernameLabel = new wxStaticText(m_LabelsPanel, wxID_ANY, "Username");
+        wxStaticText* usernameLabel = new wxStaticText(m_LabelsPanel, wxID_ANY, m_Account.GetIdentifierName() == "" ? "Username" : m_Account.GetIdentifierName());
         m_LabelsPanel->GetSizer()->Add(usernameLabel, 0, wxBOTTOM, 10);
-        m_UsernameField = new wxTextCtrl(m_ValuesPanel, wxID_ANY, m_Account.GetUsername());
-        m_ValuesPanel->GetSizer()->Add(m_UsernameField, 0, wxEXPAND | wxBOTTOM, 3);
+
+        wxPanel* fieldPanel = new wxPanel(m_ValuesPanel);
+        fieldPanel->SetSizer(new wxBoxSizer(wxHORIZONTAL));
+        m_ValuesPanel->GetSizer()->Add(fieldPanel, 0, wxEXPAND | wxBOTTOM, 3);
+
+        m_IdentifierField = new wxTextCtrl(fieldPanel, wxID_ANY, m_Account.GetIdentifier());
+        fieldPanel->GetSizer()->Add(m_IdentifierField, 1, wxBOTTOM, 3);
+
+        wxButton* renameButton = new wxButton(fieldPanel, wxID_ANY, "Rename");
+        renameButton->Bind(wxEVT_LEFT_UP, [this, usernameLabel](wxMouseEvent& evt)
+        {
+            evt.Skip();
+
+            wxTextEntryDialog dialog(this, "Enter a new name for the primary identifier.", "Rename Primary Identifier");
+
+            if (dialog.ShowModal() == wxID_OK && dialog.GetValue().length() > 0)
+            {
+                usernameLabel->SetLabel(dialog.GetValue());
+                m_IdentifierName = dialog.GetValue().ToStdString();
+
+                Layout();
+            }
+        });
+        fieldPanel->GetSizer()->Add(renameButton, 0, wxLEFT, 5);
 
         m_LabelsPanel->GetSizer()->AddSpacer(20);
         m_ValuesPanel->GetSizer()->AddSpacer(20);
@@ -110,7 +132,8 @@ namespace PM
         Account account;
 
         account.SetSystem(m_SystemField->GetValue().ToStdString());
-        account.SetUsername(m_UsernameField->GetValue().ToStdString());
+        account.SetIdentifierName(m_IdentifierName);
+        account.SetIdentifier(m_IdentifierField->GetValue().ToStdString());
 
         for (auto it = m_Fields.begin(); it != m_Fields.end(); ++it)
         {
