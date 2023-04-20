@@ -1,5 +1,7 @@
 #include "PasswordManager/GUI/AccountViewer.h"
 
+#include <wx/clipbrd.h>
+
 #include "PasswordManager/GUI/AccountEditor.h"
 
 namespace PM
@@ -20,11 +22,11 @@ namespace PM
 
         m_LabelsPanel = new wxPanel(fieldsPanel);
         m_LabelsPanel->SetSizer(new wxBoxSizer(wxVERTICAL));
-        fieldsPanel->GetSizer()->Add(m_LabelsPanel, 0, wxEXPAND | wxTOP, 10);
+        fieldsPanel->GetSizer()->Add(m_LabelsPanel, 0, wxEXPAND | wxLEFT | wxTOP, 10);
 
         m_ValuesPanel = new wxPanel(fieldsPanel);
         m_ValuesPanel->SetSizer(new wxBoxSizer(wxVERTICAL));
-        fieldsPanel->GetSizer()->Add(m_ValuesPanel, 0, wxEXPAND | wxLEFT | wxTOP, 10);
+        fieldsPanel->GetSizer()->Add(m_ValuesPanel, 1, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 10);
 
         PopulateList();
 
@@ -102,9 +104,34 @@ namespace PM
     void AccountViewer::AddField(const std::string& name, const std::string& value) noexcept
     {
         wxStaticText* fieldLabel = new wxStaticText(m_LabelsPanel, wxID_ANY, name.c_str());
-        m_LabelsPanel->GetSizer()->Add(fieldLabel, 0, wxLEFT, 10);
+        m_LabelsPanel->GetSizer()->Add(fieldLabel, 0, wxTOP, 6);
 
         wxStaticText* fieldValue = new wxStaticText(m_ValuesPanel, wxID_ANY, value.c_str());
-        m_ValuesPanel->GetSizer()->Add(fieldValue, 0, wxLEFT, 10);
+        fieldValue->Bind(wxEVT_LEFT_UP, [this, value](wxMouseEvent& evt)
+        {
+            evt.Skip();
+
+            if (wxTheClipboard->Open())
+            {
+                wxTheClipboard->SetData(new wxTextDataObject(value));
+                wxTheClipboard->Close();
+            }
+        });
+        fieldValue->Bind(wxEVT_ENTER_WINDOW, [this, fieldValue](wxMouseEvent& evt)
+        {
+            evt.Skip();
+
+            fieldValue->SetBackgroundColour(wxColour(220, 220, 220));
+            fieldValue->Refresh();
+            SetCursor(wxCursor(wxCURSOR_HAND));
+        });
+        fieldValue->Bind(wxEVT_LEAVE_WINDOW, [this, fieldValue](wxMouseEvent& evt)
+        {
+            evt.Skip();
+            fieldValue->SetBackgroundColour(wxColour(240, 240, 240));
+            fieldValue->Refresh();
+            SetCursor(wxCursor(wxCURSOR_DEFAULT));
+        });
+        m_ValuesPanel->GetSizer()->Add(fieldValue, 0, wxEXPAND | wxTOP, 6);
     }
 }
