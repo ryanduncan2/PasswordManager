@@ -5,7 +5,7 @@
 
 namespace PM
 {
-    AccountEditor::AccountEditor(wxWindow* parent) : wxDialog(parent, wxID_ANY, "Create Account", wxDefaultPosition, wxSize(500, 400))
+    AccountEditor::AccountEditor(wxWindow* parent) : wxDialog(parent, wxID_ANY, "Create Account", wxDefaultPosition, wxSize(500, 400)), m_IdentifierName(m_Account.GetIdentifierName())
     {
         SetupGUI();
         SetAccount(m_Account);
@@ -48,7 +48,7 @@ namespace PM
             if (dialog.ShowModal() == wxID_OK && dialog.GetValue().length() > 0)
             {
                 usernameLabel->SetLabel(dialog.GetValue());
-                m_Account.SetIdentifierName(dialog.GetValue().ToStdString());
+                m_IdentifierName = dialog.GetValue().ToStdString();
 
                 Layout();
             }

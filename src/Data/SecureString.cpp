@@ -11,7 +11,6 @@ namespace PM
     {
         m_Ptr = new std::uint8_t[len];
         memcpy(m_Ptr, ptr, len);
-        // wxMessageBox("this: " + std::to_string((unsigned int)this));
     }
 
     SecureString::SecureString(const char* ptr) : m_Length(0)
@@ -39,12 +38,9 @@ namespace PM
 
     SecureString::~SecureString()
     {
-        // wxMessageBox("destructor called for " + std::to_string((unsigned int)this));
 
         if (m_Ptr != nullptr && m_Length != 0)
         {
-            // wxMessageBox("destruction info: " + std::to_string((std::uint32_t)m_Ptr));
-
             memset(m_Ptr, 0, m_Length);
             delete[] m_Ptr;
         }
