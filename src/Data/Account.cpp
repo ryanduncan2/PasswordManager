@@ -4,6 +4,10 @@
 
 namespace PM
 {
+    Account::Account() noexcept : m_IdentifierName("Username")
+    {
+    }
+
     // TODO: Zero memory.
     Account Account::Load(const std::uint8_t* serial, const std::size_t size) noexcept
     {

@@ -5,45 +5,20 @@
 
 namespace PM
 {
-    AccountEditor::AccountEditor(wxWindow* parent) : wxDialog(parent, wxID_ANY, "Create Account", wxDefaultPosition, wxSize(500, 400)), m_IdentifierName("Username")
+    AccountEditor::AccountEditor(wxWindow* parent) : wxDialog(parent, wxID_ANY, "Create Account", wxDefaultPosition, wxSize(500, 400))
     {
         SetupGUI();
+        SetAccount(m_Account);
     }
 
     AccountEditor::AccountEditor(wxWindow* parent, const Account& account) : wxDialog(parent, wxID_ANY, "Edit Account", wxDefaultPosition, wxSize(500, 400)), m_Account(account), m_IdentifierName(account.GetIdentifierName())
     {
         SetupGUI();
-
-        for (std::size_t i = 0; i < m_Account.GetFields().size(); ++i)
-        {
-            AddField(m_Account.GetFields()[i].first, m_Account.GetFields()[i].second);
-        }
+        SetAccount(m_Account);
     }
 
-    void AccountEditor::SetupGUI()
+    void AccountEditor::SetAccount(const Account& account)
     {
-        SetSizer(new wxBoxSizer(wxVERTICAL));
-
-        wxScrolledWindow* contentWindow = new wxScrolledWindow(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxFULL_REPAINT_ON_RESIZE);
-        contentWindow->SetSizer(new wxBoxSizer(wxVERTICAL));
-        contentWindow->SetWindowStyle(wxBORDER_DOUBLE);
-        contentWindow->SetScrollRate(5, 5);
-        contentWindow->Scroll(wxPoint(0, 0));
-        GetSizer()->Add(contentWindow, 1, wxEXPAND | wxALL, 10);
-
-        wxPanel* fieldsPanel = new wxPanel(contentWindow);
-        fieldsPanel->SetSizer(new wxBoxSizer(wxHORIZONTAL));
-        contentWindow->GetSizer()->Add(fieldsPanel, 0, wxEXPAND | wxTOP | wxLEFT | wxRIGHT, 10);
-
-        m_LabelsPanel = new wxPanel(fieldsPanel);
-        m_LabelsPanel->SetSizer(new wxBoxSizer(wxVERTICAL));
-        m_LabelsPanel->GetSizer()->AddSpacer(3);
-        fieldsPanel->GetSizer()->Add(m_LabelsPanel, 0, wxEXPAND | wxRIGHT, 10);
-
-        m_ValuesPanel = new wxPanel(fieldsPanel);
-        m_ValuesPanel->SetSizer(new wxBoxSizer(wxVERTICAL));
-        fieldsPanel->GetSizer()->Add(m_ValuesPanel, 1, wxEXPAND, 0);
-
         // System Field
 
         wxStaticText* systemLabel = new wxStaticText(m_LabelsPanel, wxID_ANY, "System");
@@ -51,9 +26,9 @@ namespace PM
         m_SystemField = new wxTextCtrl(m_ValuesPanel, wxID_ANY, m_Account.GetSystem());
         m_ValuesPanel->GetSizer()->Add(m_SystemField, 0, wxEXPAND | wxBOTTOM, 3);
 
-        // Username Field
+        // Primary Identifier Field
 
-        wxStaticText* usernameLabel = new wxStaticText(m_LabelsPanel, wxID_ANY, m_Account.GetIdentifierName() == "" ? "Username" : m_Account.GetIdentifierName());
+        wxStaticText* usernameLabel = new wxStaticText(m_LabelsPanel, wxID_ANY, m_Account.GetIdentifierName());
         m_LabelsPanel->GetSizer()->Add(usernameLabel, 0, wxBOTTOM, 10);
 
         wxPanel* fieldPanel = new wxPanel(m_ValuesPanel);
@@ -73,7 +48,7 @@ namespace PM
             if (dialog.ShowModal() == wxID_OK && dialog.GetValue().length() > 0)
             {
                 usernameLabel->SetLabel(dialog.GetValue());
-                m_IdentifierName = dialog.GetValue().ToStdString();
+                m_Account.SetIdentifierName(dialog.GetValue().ToStdString());
 
                 Layout();
             }
@@ -82,6 +57,41 @@ namespace PM
 
         m_LabelsPanel->GetSizer()->AddSpacer(20);
         m_ValuesPanel->GetSizer()->AddSpacer(20);
+
+        // Additional Fields
+        
+        for (std::size_t i = 0; i < m_Account.GetFields().size(); ++i)
+        {
+            AddField(m_Account.GetFields()[i].first, m_Account.GetFields()[i].second);
+        }
+    }
+
+    void AccountEditor::SetupGUI()
+    {
+        SetSizer(new wxBoxSizer(wxVERTICAL));
+
+        wxPanel* contentWindow = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_DOUBLE);
+        contentWindow->SetSizer(new wxBoxSizer(wxVERTICAL));
+        GetSizer()->Add(contentWindow, 1, wxEXPAND | wxALL, 10);
+
+        wxScrolledWindow* scrolledWindow = new wxScrolledWindow(contentWindow, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxFULL_REPAINT_ON_RESIZE);
+        scrolledWindow->SetSizer(new wxBoxSizer(wxVERTICAL));
+        scrolledWindow->SetScrollRate(5, 5);
+        scrolledWindow->Scroll(wxPoint(0, 0));
+        contentWindow->GetSizer()->Add(scrolledWindow, 1, wxEXPAND | wxBOTTOM, 10);
+
+        wxPanel* fieldsPanel = new wxPanel(scrolledWindow);
+        fieldsPanel->SetSizer(new wxBoxSizer(wxHORIZONTAL));
+        scrolledWindow->GetSizer()->Add(fieldsPanel, 0, wxEXPAND | wxTOP | wxLEFT | wxRIGHT, 10);
+
+        m_LabelsPanel = new wxPanel(fieldsPanel);
+        m_LabelsPanel->SetSizer(new wxBoxSizer(wxVERTICAL));
+        m_LabelsPanel->GetSizer()->AddSpacer(3);
+        fieldsPanel->GetSizer()->Add(m_LabelsPanel, 0, wxEXPAND | wxRIGHT, 10);
+
+        m_ValuesPanel = new wxPanel(fieldsPanel);
+        m_ValuesPanel->SetSizer(new wxBoxSizer(wxVERTICAL));
+        fieldsPanel->GetSizer()->Add(m_ValuesPanel, 1, wxEXPAND, 0);
 
         // Add Button
 
@@ -99,7 +109,7 @@ namespace PM
         });
         contentWindow->GetSizer()->Add(addFieldButton, 0, wxALIGN_CENTER_HORIZONTAL | wxBOTTOM, 10);
         
-        // Buttons
+        // Control Buttons
 
         wxPanel* buttonPanel = new wxPanel(this);
         buttonPanel->SetSizer(new wxBoxSizer(wxHORIZONTAL));
@@ -164,6 +174,12 @@ namespace PM
         {
             evt.Skip();
             
+            wxMessageDialog dialog(this, "Are you sure you want to delete this field?", "Confirm Delete", wxOK | wxCANCEL);
+            if (dialog.ShowModal() != wxID_OK)
+            {
+                return;
+            }
+
             for (std::size_t i = 0; i < m_Fields.size(); ++i)
             {
                 if (m_Fields[i].first == fieldLabel->GetLabel().ToStdString())

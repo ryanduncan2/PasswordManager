@@ -16,9 +16,12 @@ namespace PM
     public:
         static Account Load(const std::uint8_t* serial, const std::size_t size) noexcept;
 
-        inline Account() noexcept { }
+        Account() noexcept;
 
         void AddField(const std::string& key, const std::string& value) noexcept;
+        std::uint8_t* Serialise(std::size_t& sizeBuffer) const noexcept;
+        std::size_t GetSerialSize() const noexcept;
+
         void SetSystem(const std::string& system) noexcept;
         inline void SetIdentifier(const std::string& id) noexcept { m_IdentifierField = id; }
         inline void SetIdentifierName(const std::string& name) noexcept { m_IdentifierName = name; }
@@ -27,9 +30,6 @@ namespace PM
         inline std::string GetIdentifier() const { return m_IdentifierField; }
         inline std::string GetIdentifierName() const { return m_IdentifierName; }
         inline std::vector<std::pair<std::string, std::string>> GetFields() const noexcept { return m_Fields; }
-
-        std::uint8_t* Serialise(std::size_t& sizeBuffer) const noexcept;
-        std::size_t GetSerialSize() const noexcept;
     };
 }
 

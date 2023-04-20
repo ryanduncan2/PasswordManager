@@ -16,13 +16,14 @@ namespace PM
     private:
         Account m_Account;
 
-        std::string m_IdentifierName;
-
         wxPanel *m_LabelsPanel, *m_ValuesPanel;
         wxTextCtrl *m_SystemField, *m_IdentifierField;
+        std::string m_IdentifierName;
         std::vector<std::pair<std::string, wxTextCtrl*>> m_Fields;
 
         void SetupGUI();
+        void SetAccount(const Account& account);
+
         void AddField(const std::string& fieldName, const std::string& value = "");
         void ResolveAccount();
 
