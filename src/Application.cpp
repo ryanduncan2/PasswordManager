@@ -92,7 +92,9 @@ namespace PM
 
         // List Area
 
-        m_ListPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_DOUBLE);
+        m_ListPanel = new wxScrolledWindow(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_DOUBLE);
+        m_ListPanel->SetScrollRate(5, 5);
+        m_ListPanel->Scroll(wxPoint(0, 0));
         m_ListPanel->SetSizer(new wxBoxSizer(wxVERTICAL));
         GetSizer()->Add(m_ListPanel, 1, wxEXPAND | wxALL | wxBORDER_DEFAULT, 10);
     }

@@ -11,7 +11,7 @@ namespace PM
     class Application : public wxFrame
     {
     private:
-        wxPanel* m_ListPanel;
+        wxScrolledWindow* m_ListPanel;
 
         AccountManager m_Manager;
 

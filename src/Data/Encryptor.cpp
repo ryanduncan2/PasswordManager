@@ -100,7 +100,6 @@ namespace PM
         return buffer;
     }
 
-    // Perhaps change to PBKDF2 (at least use SHA256/512)
     SecureString Encryptor::GenerateKey(const SecureString& password, const std::uint8_t* salt) noexcept
     {
         std::uint8_t* symmetricKey = new std::uint8_t[32];
