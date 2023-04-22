@@ -29,7 +29,7 @@ namespace PM
         // Primary Identifier Field
 
         wxStaticText* usernameLabel = new wxStaticText(m_LabelsPanel, wxID_ANY, m_Account.GetIdentifierName());
-        m_LabelsPanel->GetSizer()->Add(usernameLabel, 0, wxBOTTOM, 10);
+        m_LabelsPanel->GetSizer()->Add(usernameLabel, 0, wxBOTTOM, 13);
 
         wxPanel* fieldPanel = new wxPanel(m_ValuesPanel);
         fieldPanel->SetSizer(new wxBoxSizer(wxHORIZONTAL));
