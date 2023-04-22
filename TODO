@@ -1,6 +1,5 @@
 Features:
-    - Add quick copy button in account viewer for all fields.
-    - Add renaming button for all fields (including username [primary identifier]).
+    - Add renaming button for all fields.
     - Add movement buttons for all fields.
     - Add solution for storing non-account data (bank details, TFN, phone numbers, profiles etc...).
 
