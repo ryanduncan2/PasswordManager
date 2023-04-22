@@ -38,7 +38,6 @@ namespace PM
 
     SecureString::~SecureString()
     {
-
         if (m_Ptr != nullptr && m_Length != 0)
         {
             memset(m_Ptr, 0, m_Length);
