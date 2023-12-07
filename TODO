@@ -2,5 +2,8 @@ Features:
     - Add renaming button for all fields.
     - Add movement buttons for all fields.
     - Add solution for storing non-account data (bank details, TFN, phone numbers, profiles etc...).
+    - Make passwords appear as dots when viewing accounts unless a reveal button has been pressed.
+    - Add ability to change encryption protocols.
 
 Bug Fixes:
+    - Make less laggy for absurd amounts of accounts (e.g., >500)

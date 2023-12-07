@@ -32,7 +32,7 @@ namespace PM
 
         bool FileExists() const noexcept;
         #undef CreateFile
-        void CreateFile(const SecureString& password) const noexcept;;
+        void CreateFile(const SecureString& password) noexcept;
 
         bool LoadData(const SecureString& password) noexcept;
         void SaveData();

@@ -1,6 +1,7 @@
 #include "PasswordManager/Application.h"
 
 #include <regex>
+#include <string>
 
 #include "PasswordManager/Data/AccountManager.h"
 #include "PasswordManager/Data/Encryptor.h"
@@ -68,7 +69,6 @@ namespace PM
         searchInput->Bind(wxEVT_TEXT_ENTER, [this, searchInput](wxCommandEvent& evt)
         {
             PopulateList(searchInput->GetValue().ToStdString());
-            evt.Skip();
         });
 
         wxButton* searchButton = new wxButton(searchPanel, wxID_ANY, "Search");
@@ -93,9 +93,16 @@ namespace PM
         // List Area
 
         m_ListPanel = new wxScrolledWindow(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_DOUBLE);
-        m_ListPanel->SetScrollRate(5, 5);
+        m_ListPanel->SetScrollRate(5, 10);
         m_ListPanel->Scroll(wxPoint(0, 0));
         m_ListPanel->SetSizer(new wxBoxSizer(wxVERTICAL));
+
+        m_ListPanel->Bind(wxEVT_MOUSEWHEEL, [this](wxMouseEvent& evt)
+        {
+            m_ListPanel->Refresh();
+            evt.Skip();
+        });
+
         GetSizer()->Add(m_ListPanel, 1, wxEXPAND | wxALL | wxBORDER_DEFAULT, 10);
     }
 
@@ -140,12 +147,16 @@ namespace PM
 
             ListEntry* accountEntry = new ListEntry(m_ListPanel, account);
             m_ListPanel->GetSizer()->Add(accountEntry, 0, wxEXPAND | wxALL, 3);
+
+            if (i == 0)
+                accountEntry->test = true;
+
             accountEntry->Bind(wxEVT_LEFT_DCLICK, [this, account, accountEntry, i](wxMouseEvent& evt) mutable
             {
                 AccountViewer viewer(this, account);
                 int returnCode = viewer.ShowModal();
                 
-                accountEntry->ResetBackground();
+                // accountEntry->ResetBackground();
 
                 if (returnCode == AccountViewer::ReturnCode::EDITED)
                 {

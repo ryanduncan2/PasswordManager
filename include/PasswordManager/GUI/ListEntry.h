@@ -13,17 +13,20 @@ namespace PM
         static const wxColour BACKGROUND_COLOUR_NEUTRAL;
         static const wxColour BACKGROUND_COLOUR_HOVERED;
 
-        wxStaticText *m_SystemLabel, *m_IdentifierLabel;
+        wxString m_SystemStr, m_IdentifierStr;
+
 
         void SetBinds(wxWindow* window);
 
     public:
         ListEntry(wxWindow* parent, const Account& account);
 
+        bool test = false;
+
         void SetSystem(const std::string& system);
         void SetIdentifier(const std::string& id);
 
-        void ResetBackground();
+        void OnPaintEvent(wxPaintEvent& event);
     };
 }
 

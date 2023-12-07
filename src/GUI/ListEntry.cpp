@@ -7,33 +7,13 @@ namespace PM
 
     ListEntry::ListEntry(wxWindow* parent, const Account& account) : wxWindow(parent, wxID_ANY)
     {
-        SetSizer(new wxBoxSizer(wxHORIZONTAL));
+        SetMinSize(wxSize(200, 30));
+        Bind(wxEVT_PAINT, &ListEntry::OnPaintEvent, this);    
         SetBackgroundColour(BACKGROUND_COLOUR_NEUTRAL);
         SetBinds(this);
 
-        GetSizer()->AddSpacer(10);
-
-        // System Label
-
-        m_SystemLabel = new wxStaticText(this, wxID_ANY, account.GetSystem().c_str());
-        SetBinds(m_SystemLabel);
-        GetSizer()->Add(m_SystemLabel, 1, wxALL, 5);
-
-        m_SystemLabel->Bind(wxEVT_LEFT_DCLICK, [this](wxMouseEvent& evt)
-        {
-            QueueEvent(new wxMouseEvent(wxEVT_LEFT_DCLICK));
-        });
-
-        // Username Label
-
-        m_IdentifierLabel = new wxStaticText(this, wxID_ANY, account.GetIdentifier().c_str());
-        SetBinds(m_IdentifierLabel);
-        GetSizer()->Add(m_IdentifierLabel, 1, wxALL, 5);
-
-        m_IdentifierLabel->Bind(wxEVT_LEFT_DCLICK, [this](wxMouseEvent& evt)
-        {
-            QueueEvent(new wxMouseEvent(wxEVT_LEFT_DCLICK));
-        });
+        m_SystemStr = account.GetSystem();
+        m_IdentifierStr = account.GetIdentifier();
     }
 
     void ListEntry::SetBinds(wxWindow* window)
@@ -47,8 +27,6 @@ namespace PM
             if (!GetScreenRect().Contains(mousePos))
             {
                 SetBackgroundColour(BACKGROUND_COLOUR_NEUTRAL);
-                m_SystemLabel->SetBackgroundColour(BACKGROUND_COLOUR_NEUTRAL);
-                m_IdentifierLabel->SetBackgroundColour(BACKGROUND_COLOUR_NEUTRAL);
                 SetCursor(wxCursor(wxCURSOR_DEFAULT));
 
                 Refresh();
@@ -61,8 +39,6 @@ namespace PM
         window->Bind(wxEVT_ENTER_WINDOW, [this](wxMouseEvent& evt)
         {
             SetBackgroundColour(BACKGROUND_COLOUR_HOVERED);
-            m_SystemLabel->SetBackgroundColour(BACKGROUND_COLOUR_HOVERED);
-            m_IdentifierLabel->SetBackgroundColour(BACKGROUND_COLOUR_HOVERED);
             SetCursor(wxCursor(wxCURSOR_HAND));
             
             Refresh();
@@ -73,25 +49,26 @@ namespace PM
 
     void ListEntry::SetSystem(const std::string& system)
     {
-        m_SystemLabel->SetLabel(system);
+        m_SystemStr = system;
 
         Refresh();
     }
 
     void ListEntry::SetIdentifier(const std::string& id)
     {
-        m_IdentifierLabel->SetLabel(id);
+        m_IdentifierStr = id;
         
         Refresh();
     }
 
-    void ListEntry::ResetBackground()
+    void ListEntry::OnPaintEvent(wxPaintEvent& event)
     {
-        SetBackgroundColour(BACKGROUND_COLOUR_NEUTRAL);
-        m_SystemLabel->SetBackgroundColour(BACKGROUND_COLOUR_NEUTRAL);
-        m_IdentifierLabel->SetBackgroundColour(BACKGROUND_COLOUR_NEUTRAL);
-        SetCursor(wxCursor(wxCURSOR_DEFAULT));
+        wxPaintDC dc(this);
 
-        Refresh();
+        if (GetPosition().y > -100 && GetPosition().y + 30 < GetParent()->GetSize().GetHeight() + 100)
+        {
+            dc.DrawText(m_SystemStr, 10, 7);
+            dc.DrawText(m_IdentifierStr, 200, 7);
+        }
     }
 }

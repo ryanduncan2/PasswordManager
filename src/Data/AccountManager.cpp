@@ -17,8 +17,10 @@ namespace PM
     }
 
     #undef CreateFile
-    void AccountManager::CreateFile(const SecureString& password) const noexcept
+    void AccountManager::CreateFile(const SecureString& password) noexcept
     {
+        m_Password = password;
+
         std::ofstream file(DATA_FILE, std::ios::out | std::ios::binary | std::ios::trunc);
 
         std::size_t sizeBuffer;
@@ -31,6 +33,17 @@ namespace PM
 
         memset(serial, 0, sizeBuffer);
         delete[] serial;
+
+        for (int i = 0; i < 500; ++i)
+        {
+            Account acc;
+            acc.SetSystem("a");
+            acc.SetIdentifier("b");
+
+            AddAccount(acc);
+        }
+
+        SaveData();
     }
 
     bool AccountManager::LoadData(const SecureString& password) noexcept
@@ -62,8 +75,6 @@ namespace PM
         {
             return false;
         }
-
-
 
         memcpy(&noOfAccounts, plaintext.c_str() + index, sizeof(std::size_t));
         index += sizeof(std::size_t);
