@@ -12,7 +12,10 @@
 
 namespace PM
 {
-    Application::Application() : wxFrame(NULL, wxID_ANY, "Password Manager", wxDefaultPosition, wxSize(500, 720))
+    Application::Application() 
+      : wxFrame(NULL, wxID_ANY, "Password Manager", wxDefaultPosition, wxSize(500, 720)),
+        m_ExpansionIterations(0),
+        m_LastIndex(0)
     {
         wxIcon icon;
         icon.LoadFile("favicon.ico", wxBITMAP_TYPE_ICO);
@@ -27,7 +30,7 @@ namespace PM
         }
 
         Authenticate();
-        PopulateList();
+        ResetList();
     }
 
     void Application::RunFirstTimeSetup()
@@ -68,14 +71,14 @@ namespace PM
         searchPanel->GetSizer()->Add(searchInput, 1, wxEXPAND | wxRIGHT, 5);
         searchInput->Bind(wxEVT_TEXT_ENTER, [this, searchInput](wxCommandEvent& evt)
         {
-            PopulateList(searchInput->GetValue().ToStdString());
+            ResetList(searchInput->GetValue().ToStdString());
         });
 
         wxButton* searchButton = new wxButton(searchPanel, wxID_ANY, "Search");
         searchPanel->GetSizer()->Add(searchButton, 0, wxEXPAND);
         searchButton->Bind(wxEVT_LEFT_UP, [this, searchInput](wxMouseEvent& evt)
         {
-            PopulateList(searchInput->GetValue().ToStdString());
+            ResetList(searchInput->GetValue().ToStdString());
             evt.Skip();
         });
         
@@ -96,12 +99,6 @@ namespace PM
         m_ListPanel->SetScrollRate(5, 10);
         m_ListPanel->Scroll(wxPoint(0, 0));
         m_ListPanel->SetSizer(new wxBoxSizer(wxVERTICAL));
-
-        m_ListPanel->Bind(wxEVT_MOUSEWHEEL, [this](wxMouseEvent& evt)
-        {
-            m_ListPanel->Refresh();
-            evt.Skip();
-        });
 
         GetSizer()->Add(m_ListPanel, 1, wxEXPAND | wxALL | wxBORDER_DEFAULT, 10);
     }
@@ -129,14 +126,30 @@ namespace PM
         Destroy();
     }
 
-    void Application::PopulateList(const std::string& queryRegex)
+    void Application::ResetList(const std::string& queryRegex)
     {
         m_ListPanel->DestroyChildren();
 
+        wxButton* button = new wxButton(m_ListPanel, wxID_ANY, "Expand");
+        m_ListPanel->GetSizer()->Add(button, 0, wxALIGN_CENTER_HORIZONTAL);
+        button->Bind(wxEVT_LEFT_UP, [this, queryRegex](wxMouseEvent& evt)
+        {
+            ExpandList(queryRegex);
+            evt.Skip();
+        });
+
+        m_LastIndex = 0;
+
+        ExpandList(queryRegex);
+    }
+
+    void Application::ExpandList(const std::string& queryRegex)
+    {
         std::vector<Account> accounts = m_Manager.GetAccounts();
         std::regex regex("(.*)" + queryRegex + "(.*)", std::regex_constants::ECMAScript | std::regex_constants::icase);
 
-        for (std::size_t i = 0; i < accounts.size(); ++i)
+        int accountsAdded = 0;
+        for (std::size_t i = m_LastIndex + 1; i < accounts.size() && accountsAdded < 30; ++i)
         {
             Account account = accounts[i];
 
@@ -145,40 +158,42 @@ namespace PM
                 continue;
             }
 
-            ListEntry* accountEntry = new ListEntry(m_ListPanel, account);
-            m_ListPanel->GetSizer()->Add(accountEntry, 0, wxEXPAND | wxALL, 3);
-
-            if (i == 0)
-                accountEntry->test = true;
-
-            accountEntry->Bind(wxEVT_LEFT_DCLICK, [this, account, accountEntry, i](wxMouseEvent& evt) mutable
-            {
-                AccountViewer viewer(this, account);
-                int returnCode = viewer.ShowModal();
-                
-                // accountEntry->ResetBackground();
-
-                if (returnCode == AccountViewer::ReturnCode::EDITED)
-                {
-                    account = viewer.GetAccount();
-
-                    m_Manager.SetAccount(i, account);
-                    m_Manager.SaveData();
-
-                    accountEntry->SetSystem(account.GetSystem());
-                    accountEntry->SetIdentifier(account.GetIdentifier());
-                }
-                else if (returnCode == AccountViewer::ReturnCode::DELETED)
-                {
-                    m_Manager.DeleteAccount(i);
-                    m_Manager.SaveData();
-
-                    PopulateList();
-                }
-            });
+            accountsAdded++;
+            m_LastIndex = i;
+            AddAccountDisplay(account, i);
         }
 
         Layout();
+    }
+
+    void Application::AddAccountDisplay(Account& account, int index)
+    {
+        ListEntry* accountEntry = new ListEntry(m_ListPanel, account);
+        m_ListPanel->GetSizer()->Insert(m_ListPanel->GetSizer()->GetChildren().size() - 1, accountEntry, 0, wxEXPAND | wxALL, 3);
+
+        accountEntry->Bind(wxEVT_LEFT_DCLICK, [this, account, accountEntry, index](wxMouseEvent& evt) mutable
+        {
+            AccountViewer viewer(this, account);
+            int returnCode = viewer.ShowModal();
+
+            if (returnCode == AccountViewer::ReturnCode::EDITED)
+            {
+                account = viewer.GetAccount();
+
+                m_Manager.SetAccount(index, account);
+                m_Manager.SaveData();
+
+                accountEntry->SetSystem(account.GetSystem());
+                accountEntry->SetIdentifier(account.GetIdentifier());
+            }
+            else if (returnCode == AccountViewer::ReturnCode::DELETED)
+            {
+                m_Manager.DeleteAccount(index);
+                m_Manager.SaveData();
+
+                ResetList();
+            }
+        });
     }
 
     void Application::AddAccount(const Account& account)
@@ -186,7 +201,7 @@ namespace PM
         m_Manager.AddAccount(account);
         m_Manager.SaveData();
 
-        PopulateList();
+        ResetList();
 
         Layout();
     }

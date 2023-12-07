@@ -11,6 +11,9 @@ namespace PM
     class Application : public wxFrame
     {
     private:
+        int m_ExpansionIterations;
+        int m_LastIndex;
+
         wxScrolledWindow* m_ListPanel;
 
         AccountManager m_Manager;
@@ -19,7 +22,9 @@ namespace PM
         void Authenticate();
         void RunFirstTimeSetup();
 
-        void PopulateList(const std::string& queryRegex = "");
+        void ResetList(const std::string& queryRegex = "");
+        void ExpandList(const std::string& queryRegex = "");
+        void AddAccountDisplay(Account& account, int index);
         void AddAccount(const Account& account);
 
     public:

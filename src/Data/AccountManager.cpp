@@ -37,7 +37,7 @@ namespace PM
         for (int i = 0; i < 500; ++i)
         {
             Account acc;
-            acc.SetSystem("a");
+            acc.SetSystem("a" + std::to_string(i));
             acc.SetIdentifier("b");
 
             AddAccount(acc);
