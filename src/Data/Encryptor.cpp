@@ -112,7 +112,7 @@ namespace PM
         return result;
     }
 
-    SecureString Encryptor::GenerateRandomString(const std::size_t length) noexcept
+    SecureString Encryptor::GenerateRandomString(const std::size_t length, const CharacterMap& charMap) noexcept
     {
         std::uint8_t* buffer = new std::uint8_t[length];
         std::uint8_t* processedBuffer = new std::uint8_t[length];
@@ -121,11 +121,13 @@ namespace PM
 
         for (std::size_t i = 0; i < length; ++i)
         {
-            processedBuffer[i] = (std::uint8_t)std::floor(buffer[i] * (93.0f / 256.0f) + 33);
+            processedBuffer[i] = charMap.Map(buffer[i]);
+            // processedBuffer[i] = (std::uint8_t)std::floor(buffer[i] * (93.0f / 256.0f) + 33);
         }
 
         SecureString ss(processedBuffer, length);
 
+        // Zero buffer/processed buffer memory?
         delete[] buffer;
         delete[] processedBuffer;
 

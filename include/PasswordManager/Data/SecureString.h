@@ -25,6 +25,7 @@ namespace PM
         inline const std::size_t length() const noexcept { return m_Length; }
         inline std::string to_string() const noexcept { return std::string((const char*)m_Ptr, m_Length); }
         std::uint8_t* substr(std::size_t index, std::size_t length) const;
+        bool contains(const std::uint8_t ch) const noexcept;
 
         void operator=(const SecureString& ss);
     };

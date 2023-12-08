@@ -11,6 +11,7 @@ set(SRC_FILES
     src/EntryPoint.cpp
     src/Application.cpp
 
+    src/Data/CharacterMap.cpp
     src/Data/Account.cpp
     src/Data/AccountManager.cpp
     src/Data/Encryptor.cpp

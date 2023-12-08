@@ -1,9 +1,17 @@
 Features:
-    - Add renaming button for all fields.
-    - Add movement buttons for all fields.
-    - Add solution for storing non-account data (bank details, TFN, phone numbers, profiles etc...).
-    - Make passwords appear as dots when viewing accounts unless a reveal button has been pressed.
-    - Add ability to change encryption protocols.
+- Add renaming button for all fields.
+- Add movement buttons for all fields.
+- Add solution for storing non-account data (bank details, TFN, phone numbers, profiles etc...).
+- Make passwords appear as dots when viewing accounts unless a reveal button has been pressed.
+- Add ability to change encryption protocols.
+- Randomiser Dialog Settings:
+    - String Length
+    - Allowed/Disallowed Characters
+    - Numerals
+    - Capitals
+    - Special Characters
+    - Guarantee All Types
+    - Presets
+- Backup System
 
 Bug Fixes:
-    - Make less laggy for absurd amounts of accounts (e.g., >500)

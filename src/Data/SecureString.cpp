@@ -57,6 +57,19 @@ namespace PM
         return str;
     }
 
+    bool SecureString::contains(const std::uint8_t ch) const noexcept
+    {
+        for (std::size_t i = 0; i < m_Length; ++i)
+        {
+            if (m_Ptr[i] == ch)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     void SecureString::operator=(const SecureString& ss)
     {
         if (m_Ptr != nullptr && m_Length != 0)

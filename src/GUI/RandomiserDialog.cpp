@@ -32,6 +32,49 @@ namespace PM
         wxTextCtrl* lengthInput = new wxTextCtrl(inputPanel, wxID_ANY, "20");
         inputPanel->GetSizer()->Add(lengthInput);
 
+        // Special Characters Label/Checkbox
+
+        wxStaticText* specCharsLabel = new wxStaticText(labelPanel, wxID_ANY, "Special Characters");
+        labelPanel->GetSizer()->Add(specCharsLabel, 0, wxTOP, 15);
+
+        wxCheckBox* specCharsInput = new wxCheckBox(inputPanel, wxID_ANY, "");
+        specCharsInput->SetValue(true);
+        inputPanel->GetSizer()->Add(specCharsInput, 0, wxTOP, 12);
+
+        // Numerals Label/Checkbox
+
+        wxStaticText* numeralsLabel = new wxStaticText(labelPanel, wxID_ANY, "Numerals");
+        labelPanel->GetSizer()->Add(numeralsLabel, 0, wxTOP, 0);
+
+        wxCheckBox* numeralsInput = new wxCheckBox(inputPanel, wxID_ANY, "");
+        numeralsInput->SetValue(true);
+        inputPanel->GetSizer()->Add(numeralsInput, 0, wxTOP, 1);
+
+        // Capitals Label/Checkbox
+
+        wxStaticText* capitalsLabel = new wxStaticText(labelPanel, wxID_ANY, "Capitals");
+        labelPanel->GetSizer()->Add(capitalsLabel, 0, wxTOP, 0);
+
+        wxCheckBox* capitalsInput = new wxCheckBox(inputPanel, wxID_ANY, "");
+        capitalsInput->SetValue(true);
+        inputPanel->GetSizer()->Add(capitalsInput, 0, wxTOP, 1);
+
+        // Allowed Characters Label/Input
+
+        wxStaticText* allowedCharsLabel = new wxStaticText(labelPanel, wxID_ANY, "Allowed Characters");
+        labelPanel->GetSizer()->Add(allowedCharsLabel, 0, wxTOP, 14);
+
+        wxTextCtrl* allowedCharsInput = new wxTextCtrl(inputPanel, wxID_ANY, "");
+        inputPanel->GetSizer()->Add(allowedCharsInput, 0, wxTOP, 10);
+
+        // Disallowed Characters Label/Input
+
+        wxStaticText* disallowedCharsLabel = new wxStaticText(labelPanel, wxID_ANY, "Disallowed Characters");
+        labelPanel->GetSizer()->Add(disallowedCharsLabel, 0, wxTOP, 7);
+
+        wxTextCtrl* disallowedCharsInput = new wxTextCtrl(inputPanel, wxID_ANY, "");
+        inputPanel->GetSizer()->Add(disallowedCharsInput, 0, wxTOP, 2);
+
         // Buttons
 
         wxPanel* buttonPanel = new wxPanel(this);
@@ -46,9 +89,13 @@ namespace PM
         buttonPanel->GetSizer()->Add(cancelButton);
 
         wxButton* submitButton = new wxButton(buttonPanel, wxID_ANY, "Randomise");
-        submitButton->Bind(wxEVT_LEFT_UP, [this, lengthInput](wxMouseEvent evt)
+        submitButton->Bind(wxEVT_LEFT_UP, [this, lengthInput, capitalsInput, numeralsInput, specCharsInput, allowedCharsInput, disallowedCharsInput](wxMouseEvent evt)
         {
-            m_RandomStr = Encryptor::GenerateRandomString(std::stoi(lengthInput->GetValue().ToStdString()));
+            SecureString allowedChars(allowedCharsInput->GetValue().ToStdString());
+            SecureString disallowedChars(disallowedCharsInput->GetValue().ToStdString());
+            CharacterMap map(capitalsInput->GetValue(), numeralsInput->GetValue(), specCharsInput->GetValue(), allowedChars, disallowedChars);
+
+            m_RandomStr = Encryptor::GenerateRandomString(std::stoi(lengthInput->GetValue().ToStdString()), map);
             EndModal(ReturnCode::OK);
         });
         buttonPanel->GetSizer()->Add(submitButton);
