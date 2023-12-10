@@ -33,13 +33,6 @@ namespace PM
 
         Authenticate();
         ResetList();
-
-        SecureString str1("4");
-        SecureString str2("");
-
-        CharacterMap map(true, false, false, str1, str2);
-        map.PrintMap();
-        wxMessageBox(std::to_string(map.Map(56)));
     }
 
     void Application::RunFirstTimeSetup()

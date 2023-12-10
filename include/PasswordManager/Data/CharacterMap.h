@@ -31,8 +31,6 @@ namespace PM
     public:
         CharacterMap(const bool allowCapitals, const bool allowNumerals, const bool allowSpecialChars, const SecureString& allowedChars, const SecureString& disallowedChars);
         std::uint8_t Map(const std::uint8_t value) const noexcept;
-
-        inline void PrintMap() { wxMessageBox(m_Map); }
     };
 }
 
