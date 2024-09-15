@@ -35,6 +35,7 @@ namespace PM
         // Special Characters Label/Checkbox
 
         wxStaticText* specCharsLabel = new wxStaticText(labelPanel, wxID_ANY, "Special Characters");
+        specCharsLabel->SetToolTip(new wxToolTip("Allow special characters, like punctuation (e.g., '!', '@', ...)."));
         labelPanel->GetSizer()->Add(specCharsLabel, 0, wxTOP, 15);
 
         wxCheckBox* specCharsInput = new wxCheckBox(inputPanel, wxID_ANY, "");
@@ -44,6 +45,7 @@ namespace PM
         // Numerals Label/Checkbox
 
         wxStaticText* numeralsLabel = new wxStaticText(labelPanel, wxID_ANY, "Numerals");
+        numeralsLabel->SetToolTip(new wxToolTip("Allow numerals (e.g., '1', '2', ...)."));
         labelPanel->GetSizer()->Add(numeralsLabel, 0, wxTOP, 0);
 
         wxCheckBox* numeralsInput = new wxCheckBox(inputPanel, wxID_ANY, "");
@@ -53,6 +55,7 @@ namespace PM
         // Capitals Label/Checkbox
 
         wxStaticText* capitalsLabel = new wxStaticText(labelPanel, wxID_ANY, "Capitals");
+        capitalsLabel->SetToolTip(new wxToolTip("Allow capital letters (e.g., 'A', 'B', ...)."));
         labelPanel->GetSizer()->Add(capitalsLabel, 0, wxTOP, 0);
 
         wxCheckBox* capitalsInput = new wxCheckBox(inputPanel, wxID_ANY, "");
@@ -62,6 +65,7 @@ namespace PM
         // Allowed Characters Label/Input
 
         wxStaticText* allowedCharsLabel = new wxStaticText(labelPanel, wxID_ANY, "Allowed Characters");
+        allowedCharsLabel->SetToolTip(new wxToolTip("Allow these characters, even if disallowed by another option (e.g., include 'A' despite disabling capital letters)."));
         labelPanel->GetSizer()->Add(allowedCharsLabel, 0, wxTOP, 14);
 
         wxTextCtrl* allowedCharsInput = new wxTextCtrl(inputPanel, wxID_ANY, "");
@@ -70,6 +74,7 @@ namespace PM
         // Disallowed Characters Label/Input
 
         wxStaticText* disallowedCharsLabel = new wxStaticText(labelPanel, wxID_ANY, "Disallowed Characters");
+        disallowedCharsLabel->SetToolTip(new wxToolTip("Disallow these characters, even if allowed by another option (e.g., exclude 'A' despite enabling capital letters)."));
         labelPanel->GetSizer()->Add(disallowedCharsLabel, 0, wxTOP, 7);
 
         wxTextCtrl* disallowedCharsInput = new wxTextCtrl(inputPanel, wxID_ANY, "");
