@@ -189,7 +189,7 @@ namespace PM
                 }
             }
 
-            // Can't Destroy() these for some reason.
+            // TODO: Can't Destroy() these for some reason.
             fieldPanel->Hide();
             fieldLabel->Hide();
 

@@ -13,10 +13,10 @@ namespace PM
         m_SystemLabel = new wxStaticText(this, wxID_ANY, (m_Account.GetSystem() + " Account").c_str());
         GetSizer()->Add(m_SystemLabel, 0, wxTOP | wxLEFT, 10);
 
-        wxScrolledWindow* fieldsPanel = new wxScrolledWindow(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxFULL_REPAINT_ON_RESIZE);
+        wxScrolledWindow* fieldsPanel = new wxScrolledWindow(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxFULL_REPAINT_ON_RESIZE | wxVSCROLL);
         fieldsPanel->SetSizer(new wxBoxSizer(wxHORIZONTAL));
         fieldsPanel->SetWindowStyle(wxBORDER_DOUBLE);
-        fieldsPanel->SetScrollRate(5, 5);
+        fieldsPanel->SetScrollRate(5, 0);
         fieldsPanel->Scroll(wxPoint(0, 0));
         GetSizer()->Add(fieldsPanel, 1, wxEXPAND | wxALL, 10);
 
@@ -91,6 +91,8 @@ namespace PM
 
         m_SystemLabel->SetLabel((m_Account.GetSystem() + " Account").c_str());
 
+        m_ValuesPanel->GetSizer()->AddSpacer(4);
+
         AddField(m_Account.GetIdentifierName(), m_Account.GetIdentifier());
 
         for (std::size_t i = 0; i < m_Account.GetFields().size(); ++i)
@@ -106,7 +108,13 @@ namespace PM
         wxStaticText* fieldLabel = new wxStaticText(m_LabelsPanel, wxID_ANY, name.c_str());
         m_LabelsPanel->GetSizer()->Add(fieldLabel, 0, wxTOP, 6);
 
-        wxStaticText* fieldValue = new wxStaticText(m_ValuesPanel, wxID_ANY, value.c_str());
+        wxPanel* fieldValueBackground = new wxPanel(m_ValuesPanel, wxID_ANY);
+        fieldValueBackground->SetBackgroundColour(wxColour(240, 240, 240));
+        fieldValueBackground->SetSizer(new wxBoxSizer(wxVERTICAL));
+        fieldValueBackground->GetSizer()->AddSpacer(2);
+        m_ValuesPanel->GetSizer()->Add(fieldValueBackground, 0, wxEXPAND | wxBOTTOM, 3);
+
+        wxStaticText* fieldValue = new wxStaticText(fieldValueBackground, wxID_ANY, value.c_str(), wxDefaultPosition, wxSize(160, 15), wxST_ELLIPSIZE_END);
         fieldValue->Bind(wxEVT_LEFT_UP, [this, value](wxMouseEvent& evt)
         {
             evt.Skip();
@@ -117,21 +125,22 @@ namespace PM
                 wxTheClipboard->Close();
             }
         });
-        fieldValue->Bind(wxEVT_ENTER_WINDOW, [this, fieldValue](wxMouseEvent& evt)
+        fieldValue->Bind(wxEVT_ENTER_WINDOW, [this, fieldValueBackground, fieldValue](wxMouseEvent& evt)
         {
             evt.Skip();
 
-            fieldValue->SetBackgroundColour(wxColour(220, 220, 220));
-            fieldValue->Refresh();
+            fieldValueBackground->SetBackgroundColour(wxColour(220, 220, 220));
+            fieldValueBackground->Refresh();
             SetCursor(wxCursor(wxCURSOR_HAND));
         });
-        fieldValue->Bind(wxEVT_LEAVE_WINDOW, [this, fieldValue](wxMouseEvent& evt)
+        fieldValue->Bind(wxEVT_LEAVE_WINDOW, [this, fieldValueBackground, fieldValue](wxMouseEvent& evt)
         {
             evt.Skip();
-            fieldValue->SetBackgroundColour(wxColour(240, 240, 240));
-            fieldValue->Refresh();
+            fieldValueBackground->SetBackgroundColour(wxColour(240, 240, 240));
+            fieldValueBackground->Refresh();
             SetCursor(wxCursor(wxCURSOR_DEFAULT));
         });
-        m_ValuesPanel->GetSizer()->Add(fieldValue, 0, wxEXPAND | wxTOP, 6);
+        fieldValueBackground->GetSizer()->Add(fieldValue, 0, wxEXPAND | wxLEFT | wxRIGHT, 5);
+        fieldValueBackground->GetSizer()->AddSpacer(2);
     }
 }
