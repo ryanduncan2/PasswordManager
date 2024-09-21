@@ -34,15 +34,6 @@ namespace PM
         memset(serial, 0, sizeBuffer);
         delete[] serial;
 
-        for (int i = 0; i < 500; ++i)
-        {
-            Account acc;
-            acc.SetSystem("a" + std::to_string(i));
-            acc.SetIdentifier("b");
-
-            AddAccount(acc);
-        }
-
         SaveData();
     }
 
