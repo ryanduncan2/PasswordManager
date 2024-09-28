@@ -77,6 +77,7 @@ namespace PM
         });
 
         wxButton* searchButton = new wxButton(searchPanel, wxID_ANY, "Search");
+        searchButton->SetBackgroundColour(wxColour(255, 255, 255));
         searchPanel->GetSizer()->Add(searchButton, 0, wxEXPAND);
         searchButton->Bind(wxEVT_LEFT_UP, [this, searchInput](wxMouseEvent& evt)
         {
@@ -85,6 +86,7 @@ namespace PM
         });
         
         wxButton* addButton = new wxButton(searchPanel, wxID_ANY, "New Account");
+        addButton->SetBackgroundColour(wxColour(255, 255, 255));
         searchPanel->GetSizer()->Add(addButton);
         addButton->Bind(wxEVT_LEFT_UP, [this](wxMouseEvent& evt) 
         {
@@ -132,9 +134,10 @@ namespace PM
     {
         m_ListPanel->DestroyChildren();
 
-        wxButton* button = new wxButton(m_ListPanel, wxID_ANY, "Expand");
-        m_ListPanel->GetSizer()->Add(button, 0, wxALIGN_CENTER_HORIZONTAL);
-        button->Bind(wxEVT_LEFT_UP, [this, queryRegex](wxMouseEvent& evt)
+        wxButton* expandButton = new wxButton(m_ListPanel, wxID_ANY, "Expand");
+        expandButton->SetBackgroundColour(wxColour(255, 255, 255));
+        m_ListPanel->GetSizer()->Add(expandButton, 0, wxALIGN_CENTER_HORIZONTAL | wxTOP | wxBOTTOM, 20);
+        expandButton->Bind(wxEVT_LEFT_UP, [this, queryRegex](wxMouseEvent& evt)
         {
             ExpandList(queryRegex);
             evt.Skip();
