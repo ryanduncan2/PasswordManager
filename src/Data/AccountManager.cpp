@@ -14,7 +14,7 @@ namespace PM
     bool AccountManager::FileExists() const noexcept
     {
         return std::filesystem::exists(DATA_FILE);
-    }
+    } 
 
     #undef CreateFile
     void AccountManager::CreateFile(const SecureString& password) noexcept
@@ -90,6 +90,7 @@ namespace PM
 
         if (!file)
         {
+            wxMessageBox("test 1");
             throw std::string("Unable to open file.");
         }
 
@@ -99,6 +100,8 @@ namespace PM
         std::uint8_t* serial = Serialise(serialSize);
         SecureString plaintext(serial, serialSize);
         SecureString ciphertext = Encryptor::Encrypt(plaintext, m_Password);
+
+        wxMessageBox(ciphertext.c_str());
 
         file.write((const char*)ciphertext.c_str(), ciphertext.length());
         file.close();

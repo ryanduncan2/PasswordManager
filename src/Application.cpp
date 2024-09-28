@@ -15,9 +15,9 @@
 namespace PM
 {
     Application::Application() 
-      : wxFrame(NULL, wxID_ANY, "Password Manager", wxDefaultPosition, wxSize(500, 720)),
-        m_ExpansionIterations(0),
-        m_LastIndex(0)
+        : wxFrame(NULL, wxID_ANY, "Password Manager", wxDefaultPosition, wxSize(500, 720)),
+          m_ExpansionIterations(0),
+          m_LastIndex(0)
     {
         wxIcon icon;
         icon.LoadFile("favicon.ico", wxBITMAP_TYPE_ICO);
@@ -140,7 +140,7 @@ namespace PM
             evt.Skip();
         });
 
-        m_LastIndex = 0;
+        m_LastIndex = -1;
 
         ExpandList(queryRegex);
     }
