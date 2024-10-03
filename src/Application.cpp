@@ -99,7 +99,7 @@ namespace PM
 
         // List Area
 
-        wxStaticText* helpLabel = new wxStaticText(this, wxID_ANY, "Tip: To view an account, double click it.", wxDefaultPosition, wxDefaultSize);
+        wxStaticText* helpLabel = new wxStaticText(this, wxID_ANY, "Tip: to view an account, double click it.", wxDefaultPosition, wxDefaultSize);
         helpLabel->SetForegroundColour(wxColour(120, 120, 120));
         GetSizer()->Add(helpLabel, 0, wxLEFT, 10);
 

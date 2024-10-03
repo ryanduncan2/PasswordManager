@@ -13,6 +13,10 @@ namespace PM
         m_SystemLabel = new wxStaticText(this, wxID_ANY, (m_Account.GetSystem() + " Account").c_str());
         GetSizer()->Add(m_SystemLabel, 0, wxTOP | wxLEFT, 10);
 
+        wxStaticText* helpLabel = new wxStaticText(this, wxID_ANY, "Tip: click a value to copy it to the clipboard.");
+        helpLabel->SetForegroundColour(wxColour(120, 120, 120));
+        GetSizer()->Add(helpLabel, 0, wxLEFT | wxTOP, 10);
+
         wxScrolledWindow* fieldsPanel = new wxScrolledWindow(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxFULL_REPAINT_ON_RESIZE | wxVSCROLL);
         fieldsPanel->SetSizer(new wxBoxSizer(wxHORIZONTAL));
         fieldsPanel->SetWindowStyle(wxBORDER_DOUBLE);
