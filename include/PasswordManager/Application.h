@@ -15,6 +15,7 @@ namespace PM
         int m_LastIndex;
 
         wxScrolledWindow* m_ListPanel;
+        wxButton* m_ExpandButton;
 
         AccountManager m_Manager;
 

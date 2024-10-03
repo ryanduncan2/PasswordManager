@@ -99,6 +99,10 @@ namespace PM
 
         // List Area
 
+        wxStaticText* helpLabel = new wxStaticText(this, wxID_ANY, "Tip: To view an account, double click it.", wxDefaultPosition, wxDefaultSize);
+        helpLabel->SetForegroundColour(wxColour(120, 120, 120));
+        GetSizer()->Add(helpLabel, 0, wxLEFT, 10);
+
         m_ListPanel = new wxScrolledWindow(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_DOUBLE);
         m_ListPanel->SetScrollRate(5, 10);
         m_ListPanel->Scroll(wxPoint(0, 0));
@@ -134,10 +138,10 @@ namespace PM
     {
         m_ListPanel->DestroyChildren();
 
-        wxButton* expandButton = new wxButton(m_ListPanel, wxID_ANY, "Expand");
-        expandButton->SetBackgroundColour(wxColour(255, 255, 255));
-        m_ListPanel->GetSizer()->Add(expandButton, 0, wxALIGN_CENTER_HORIZONTAL | wxTOP | wxBOTTOM, 20);
-        expandButton->Bind(wxEVT_LEFT_UP, [this, queryRegex](wxMouseEvent& evt)
+        m_ExpandButton = new wxButton(m_ListPanel, wxID_ANY, "Expand");
+        m_ExpandButton->SetBackgroundColour(wxColour(255, 255, 255));
+        m_ListPanel->GetSizer()->Add(m_ExpandButton, 0, wxALIGN_CENTER_HORIZONTAL | wxTOP | wxBOTTOM, 20);
+        m_ExpandButton->Bind(wxEVT_LEFT_UP, [this, queryRegex](wxMouseEvent& evt)
         {
             ExpandList(queryRegex);
             evt.Skip();
@@ -166,6 +170,11 @@ namespace PM
             accountsAdded++;
             m_LastIndex = i;
             AddAccountDisplay(account, i);
+        }
+
+        if (m_LastIndex >= accounts.size() - 1)
+        {
+            m_ExpandButton->Hide();
         }
 
         Layout();
